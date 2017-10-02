@@ -33,14 +33,14 @@ public class ManterSalaImpl implements ManterSala {
     }
 
     @Override
-    public Long createSala(Sala s) throws BusinessException, PersistenceException {
+    public boolean createSala(Sala s) throws BusinessException, PersistenceException {
         if (s==null){
             throw new BusinessException("Nenhuma sala informada.");
         }
         if (s.getNome().isEmpty()){
             throw new BusinessException("A sala deve ter um nome.");
         }
-        return salaDAO.createSala(s);
+        return true;
     }
 
     @Override

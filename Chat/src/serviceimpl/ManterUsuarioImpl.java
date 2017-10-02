@@ -64,7 +64,7 @@ public class ManterUsuarioImpl implements ManterUsuario {
         if (s.getNome().isEmpty()){
             throw new BusinessException("A sala deve possuir um nome.");
         }
-        return usuarioDAO.getAllByRoom(s);
+        return usuarioDAO.getAllByRoomName(s.getNome());
     }
     
 }

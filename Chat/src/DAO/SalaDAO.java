@@ -15,6 +15,6 @@ import java.util.ArrayList;
  */
 public interface SalaDAO {
     public Sala getSalaByNome(String nome) throws PersistenceException;
-    public Long createSala(Sala s) throws PersistenceException;
+    public boolean createSala(Sala s) throws PersistenceException;
     public ArrayList<Sala> getAll() throws PersistenceException;
 }

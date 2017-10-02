@@ -16,6 +16,6 @@ import java.util.ArrayList;
  */
 public interface ManterSala {
     public Sala getSalaByNome(String nome) throws BusinessException, PersistenceException;
-    public Long createSala(Sala s) throws BusinessException, PersistenceException;
+    public boolean createSala(Sala s) throws BusinessException, PersistenceException;
     public ArrayList<Sala> getAll() throws PersistenceException;
 }
