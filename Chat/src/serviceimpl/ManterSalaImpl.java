@@ -10,7 +10,6 @@ import domain.Sala;
 import exception.BusinessException;
 import exception.PersistenceException;
 import java.util.ArrayList;
-import java.util.List;
 import service.ManterSala;
 
 /**
