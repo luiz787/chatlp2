@@ -33,7 +33,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
 
     @Override
-    public ArrayList<Usuario> getAllByRoom(Sala s) throws PersistenceException {
+    public ArrayList<Usuario> getAllByRoomName(String nomeSala) throws PersistenceException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

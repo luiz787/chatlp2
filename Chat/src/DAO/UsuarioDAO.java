@@ -18,5 +18,5 @@ public interface UsuarioDAO {
     public Usuario criarUsuario(Usuario u) throws PersistenceException;
     public Usuario alterarUsuario(Usuario u) throws PersistenceException;
     public Usuario getUsuarioByNome(String nome) throws PersistenceException;
-    public ArrayList<Usuario> getAllByRoom(Sala s) throws PersistenceException;
+    public ArrayList<Usuario> getAllByRoomName(String nomeSala) throws PersistenceException;
 }
