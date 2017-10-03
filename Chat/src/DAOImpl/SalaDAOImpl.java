@@ -7,7 +7,6 @@ package DAOImpl;
 
 import DAO.SalaDAO;
 import domain.Sala;
-import domain.Usuario;
 import exception.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,7 +58,7 @@ public class SalaDAOImpl implements SalaDAO {
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
             String sql = "INSERT INTO `sala` ("
                     + "`nom_sala`,"
-                    + "VALUES (?, ?)";
+                    + "VALUES (?)";
                     
             // como guardar os usuários no banco de dados?
             PreparedStatement pstmt = connection.prepareStatement(sql);

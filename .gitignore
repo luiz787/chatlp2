@@ -24,3 +24,4 @@ hs_err_pid*
 # excecoes de jars necessarios
 !mysql-connector-java-5.1.42-bin.jar
 !controlsfx-8.0.6_20.jar
+/Chat/build/

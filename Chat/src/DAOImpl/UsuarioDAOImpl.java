@@ -6,8 +6,6 @@
 package DAOImpl;
 
 import DAO.UsuarioDAO;
-import domain.Mensagem;
-import domain.Sala;
 import domain.Usuario;
 import exception.PersistenceException;
 import java.sql.Connection;
