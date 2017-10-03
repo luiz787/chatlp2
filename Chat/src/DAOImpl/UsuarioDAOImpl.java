@@ -6,10 +6,18 @@
 package DAOImpl;
 
 import DAO.UsuarioDAO;
+import domain.Mensagem;
 import domain.Sala;
 import domain.Usuario;
 import exception.PersistenceException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.db.JDBCManterConexao;
 
 /**
  *
@@ -18,23 +26,106 @@ import java.util.ArrayList;
 public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
-    public Usuario criarUsuario(Usuario u) throws PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Usuario criarUsuario(Usuario usu) throws PersistenceException {
+          try {
+            Connection connection = JDBCManterConexao.getInstancia().getConexao();
+            String sql = "insert into Usuario (nom_usuario,nom_sala) values(?,?) ";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, usu.getNome());
+            pstmt.setString(2, usu.getSala().getNome());
+            
+            
+            ResultSet rs = pstmt.executeQuery();
+
+            
+            rs.close();
+            pstmt.close();
+            connection.close();
+            return usu;
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(MensagemDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenceException(ex.getMessage());
+        }
     }
 
     @Override
-    public Usuario alterarUsuario(Usuario u) throws PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Usuario alterarUsuario(Usuario usu) throws PersistenceException {
+         try {
+            Connection connection = JDBCManterConexao.getInstancia().getConexao();
+            String sql = "UPDATE Usuario set nom_sala=? where nom_usuario? ";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, usu.getSala().getNome());
+            pstmt.setString(2, usu.getNome());
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            
+            SalaDAOImpl salaDAOImpl = new SalaDAOImpl();
+            Usuario u = new Usuario();
+            if (rs.next()) {
+                u.setNome(rs.getString("nom_usuario"));
+                u.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
+            }
+            rs.close();
+            pstmt.close();
+            connection.close();
+            return u;
+        } catch (SQLException | ClassNotFoundException | PersistenceException ex) {
+            Logger.getLogger(MensagemDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenceException(ex.getMessage());
+        }
     }
 
     @Override
     public Usuario getUsuarioByNome(String nome) throws PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Connection connection = JDBCManterConexao.getInstancia().getConexao();
+            String sql = "SELECT * FROM Usuario WHERE nom_usuario=?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, nome);
+            ResultSet rs = pstmt.executeQuery();
+            SalaDAOImpl salaDAOImpl = new SalaDAOImpl();
+            Usuario u = new Usuario();
+            if (rs.next()) {
+                u.setNome(rs.getString("nom_usuario"));
+                u.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
+            }
+            rs.close();
+            pstmt.close();
+            connection.close();
+            return u;
+        } catch (SQLException | ClassNotFoundException | PersistenceException ex) {
+            Logger.getLogger(MensagemDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenceException(ex.getMessage());
+        }
     }
 
     @Override
     public ArrayList<Usuario> getAllByRoomName(String nomeSala) throws PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Connection connection = JDBCManterConexao.getInstancia().getConexao();
+            String sql = "SELECT DISTINCT * FROM Usuario WHERE nom_sala = ? ";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, nomeSala);
+            ResultSet rs = pstmt.executeQuery();
+            ArrayList<Usuario> listAll = new ArrayList<>();
+            SalaDAOImpl salaDAOImpl = new SalaDAOImpl();
+            if (rs.next()) {
+                do {
+                    Usuario u = new Usuario();
+                    u.setNome(rs.getString("nom_usuario"));
+                    u.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
+                    listAll.add(u);
+                } while (rs.next());
+            }
+            rs.close();
+            pstmt.close();
+            connection.close();
+            return listAll;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MensagemDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenceException(ex.getMessage());
+        }
     }
     
 }

@@ -28,7 +28,7 @@ public class MensagemDAOImpl implements MensagemDAO {
     public Mensagem getMensagemById(Long id) throws PersistenceException {
         try {
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
-            String sql = "SELECT * FROM mensagem WHERE id_mensagem=?";
+            String sql = "SELECT * FROM Mensagem WHERE cod_mensagem=?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -37,7 +37,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             SalaDAOImpl salaDAOImpl = new SalaDAOImpl();
             if (rs.next()) {
                 msg = new Mensagem();
-                msg.setId(rs.getLong("id_mensagem"));
+                msg.setId(rs.getLong("cod_mensagem"));
                 msg.setAutor(usuarioDAOImpl.getUsuarioByNome(rs.getString("nom_autor")));
                 msg.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
                 msg.setConteudo(rs.getString("des_conteudo"));        
@@ -59,7 +59,7 @@ public class MensagemDAOImpl implements MensagemDAO {
                 throw new PersistenceException("Mensagem não pode ser nula.");
             }
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
-            String sql = "INSERT INTO `mensagem` ("
+            String sql = "INSERT INTO `Mensagem` ("
                     + "`nom_autor`,"
                     + " `nom_sala`,"
                     + " `des_conteudo`,"
@@ -72,7 +72,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             pstmt.setString(3, m.getConteudo());
             System.out.println(sql); 
             pstmt.executeUpdate();
-            ResultSet rs = pstmt.executeQuery("SELECT LAST_INSERT_ID() FROM mensagem");
+            ResultSet rs = pstmt.executeQuery("SELECT LAST_INSERT_ID() FROM Mensagem");
             Long id = null;
             if (rs.next()) {
                 id = rs.getLong(1);
@@ -92,7 +92,7 @@ public class MensagemDAOImpl implements MensagemDAO {
     public ArrayList<Mensagem> getAllBySala(Sala s) throws PersistenceException {
         try {
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
-            String sql = "SELECT * FROM mensagem WHERE nom_sala = ? ORDER BY id_mensagem;";
+            String sql = "SELECT * FROM Mensagem WHERE nom_sala = ? ORDER BY cod_mensagem;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, s.getNome());
             ResultSet rs = pstmt.executeQuery();
@@ -102,7 +102,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             if (rs.next()) {
                 do {
                     Mensagem m = new Mensagem();
-                    m.setId(rs.getLong("id_mensagem"));
+                    m.setId(rs.getLong("cod_mensagem"));
                     m.setAutor(usuarioDAOImpl.getUsuarioByNome(rs.getString("nom_usuario")));
                     m.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
                     m.setConteudo(rs.getString("des_conteudo"));

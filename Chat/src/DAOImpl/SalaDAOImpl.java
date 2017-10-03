@@ -59,13 +59,11 @@ public class SalaDAOImpl implements SalaDAO {
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
             String sql = "INSERT INTO `sala` ("
                     + "`nom_sala`,"
-                    + " `usuarios`,"
                     + "VALUES (?, ?)";
                     
             // como guardar os usuários no banco de dados?
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, s.getNome());
-            pstmt.setObject(2, s.getUsuarios());
             pstmt.executeUpdate();
             pstmt.close();
             connection.close();
@@ -88,7 +86,6 @@ public class SalaDAOImpl implements SalaDAO {
                 do {
                     Sala s = new Sala();
                     s.setNome(rs.getString("nom_sala"));
-                    s.setUsuarios((ArrayList<Usuario>) rs.getObject("usuarios"));
                     listAll.add(s);
                 } while (rs.next());
             }
