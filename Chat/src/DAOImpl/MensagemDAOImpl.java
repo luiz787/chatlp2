@@ -38,7 +38,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             if (rs.next()) {
                 msg = new Mensagem();
                 msg.setId(rs.getLong("cod_mensagem"));
-                msg.setAutor(usuarioDAOImpl.getUsuarioByNome(rs.getString("nom_autor")));
+                msg.setAutor(usuarioDAOImpl.getUsuarioByNome(rs.getString("nom_usuario")));
                 msg.setSala(salaDAOImpl.getSalaByNome(rs.getString("nom_sala")));
                 msg.setConteudo(rs.getString("des_conteudo"));        
             }
@@ -60,7 +60,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             }
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
             String sql = "INSERT INTO `Mensagem` ("
-                    + "`nom_autor`,"
+                    + "`nom_usuario`,"
                     + " `nom_sala`,"
                     + " `des_conteudo`,"
                     + "VALUES (?, ?, ?)";
