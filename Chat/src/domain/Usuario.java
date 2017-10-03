@@ -11,6 +11,15 @@ package domain;
  */
 public class Usuario {
     private String nome;
+    private Sala sala;
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
 
     public String getNome() {
         return nome;

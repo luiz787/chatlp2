@@ -14,15 +14,6 @@ public class Mensagem {
     private Usuario autor;
     private Sala sala;
     private String conteudo;
-    private UsuarioSala usuarioSala;
-
-    public UsuarioSala getUsuarioSala() {
-        return usuarioSala;
-    }
-
-    public void setUsuarioSala(UsuarioSala usuarioSala) {
-        this.usuarioSala = usuarioSala;
-    }
 
     public Long getId() {
         return id;
