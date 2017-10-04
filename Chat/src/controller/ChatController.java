@@ -6,6 +6,16 @@
 package controller;
 
 import Cliente.Client;
+import DAO.MensagemDAO;
+import DAO.SalaDAO;
+import DAO.UsuarioDAO;
+import DAOImpl.MensagemDAOImpl;
+import DAOImpl.SalaDAOImpl;
+import DAOImpl.UsuarioDAOImpl;
+import domain.Mensagem;
+import domain.Sala;
+import domain.Usuario;
+import exception.PersistenceException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -47,10 +57,52 @@ public class ChatController implements Initializable {
     }
     
     @FXML
-    public void testeClick(ActionEvent event){
+    public void criarSala(ActionEvent event) throws PersistenceException{
         System.out.println("Teste com sucesso");
+        Sala novaSala = new Sala();
+        novaSala.setNome(procuraSala.getText());
+        //currentUser.setSala(novaSala);
+        //novaSala.addUsuario(currentUser);
+        Usuario atu = new Usuario();
+        atu.setNome("Luiz");
+        atu.setSala(novaSala);
+        novaSala.addUsuario(atu);
+        SalaDAO salaDAO = new SalaDAOImpl();
+        salaDAO.createSala(novaSala);
+        System.out.println("Nome da sala: "+salaDAO.getSalaByNome(procuraSala.getText()).getNome());
     }
     
+    @FXML
+    public void entrarSala(ActionEvent event) throws PersistenceException{
+        System.out.println("Entrar sala");
+        SalaDAO salaDAO = new SalaDAOImpl();
+        Sala s = salaDAO.getSalaByNome(procuraSala.getText());
+        //currentUser.setSala(s);
+    }
+    
+    @FXML
+    public void enviarMensagem(ActionEvent event) throws PersistenceException{
+        System.out.println("Envia msg");
+        String msg = textoEscrito.getText();
+        Mensagem m = new Mensagem();
+        //m.setAutor(currentUser);
+        //m.setSala(currentUser.getSala());
+        m.setConteudo(msg);
+        MensagemDAO mensagemDAO = new MensagemDAOImpl();
+        Long newId = mensagemDAO.createMensagem(m);
+        m.setId(newId);
+        //observer olha esse método para atualizar lista de mensagens POR SALA
+    }
+    
+    @FXML
+    public void sairSala(ActionEvent event){
+        System.out.println("Sair da sala");
+        SalaDAO salaDAO = new SalaDAOImpl();
+        //salaDAO vai ter que ter metodos q atualiza os usuários da sala
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+        //currentUser.setSala(null); // sala pode ser NULL? se não, o botao sair não existe.
+        //usuarioDAO.alterarUsuario(currentUser);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

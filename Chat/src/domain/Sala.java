@@ -14,6 +14,10 @@ import java.util.ArrayList;
 public class Sala {
     private String nome;
     private ArrayList<Usuario> usuarios;
+    
+    public Sala(){
+        this.usuarios = new ArrayList<>();
+    }
 
     public String getNome() {
         return nome;
@@ -29,5 +33,9 @@ public class Sala {
 
     public void setUsuarios(ArrayList<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+    
+    public void addUsuario(Usuario u){
+        this.usuarios.add(u);
     }
 }
