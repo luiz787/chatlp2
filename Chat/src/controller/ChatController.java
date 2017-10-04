@@ -77,6 +77,7 @@ public class ChatController implements Initializable {
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         Sala s = salaDAO.getSalaByNome(procuraSala.getText());
+        System.out.println(s==null?"existe":"nao existe");
         //currentUser.setSala(s);
     }
     

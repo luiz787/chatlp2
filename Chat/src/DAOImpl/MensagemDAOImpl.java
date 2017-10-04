@@ -62,7 +62,7 @@ public class MensagemDAOImpl implements MensagemDAO {
             String sql = "INSERT INTO `Mensagem` ("
                     + "`nom_usuario`,"
                     + " `nom_sala`,"
-                    + " `des_conteudo`,"
+                    + " `des_conteudo`)"
                     + "VALUES (?, ?, ?)";
                     
             

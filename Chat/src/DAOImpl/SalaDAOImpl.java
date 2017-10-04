@@ -56,8 +56,8 @@ public class SalaDAOImpl implements SalaDAO {
                 throw new PersistenceException("Sala não pode ser nula.");
             }
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
-            String sql = "INSERT INTO `sala` ("
-                    + "`nom_sala`,"
+            String sql = "INSERT INTO sala ("
+                    + "nom_sala)"
                     + "VALUES (?)";
                     
             // como guardar os usuários no banco de dados?
