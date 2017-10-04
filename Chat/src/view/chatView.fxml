@@ -4,30 +4,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="556.0" prefWidth="620.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ChatController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="556.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatController">
   <children>
     <ScrollPane layoutX="-3.0" prefHeight="556.0" prefWidth="628.0">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="625.0">
           <children>
             <TextArea fx:id="textoEscrito" layoutX="43.0" layoutY="431.0" prefHeight="90.0" prefWidth="412.0" promptText="Digite uma Mensagem" />
-            <Button fx:id="enviarMensagem" layoutX="492.0" layoutY="445.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" text="Send" />
-            <Button fx:id="sairSala" layoutX="494.0" layoutY="509.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="96.0" text="Sair da sala" />
-            <TableView layoutX="33.0" layoutY="74.0" prefHeight="160.0" prefWidth="133.0">
+            <Button fx:id="enviarMensagem" layoutX="472.0" layoutY="447.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="117.0" text="Send" />
+            <Button fx:id="sairSala" layoutX="472.0" layoutY="38.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="96.0" text="Sair da sala" />
+            <TableView layoutX="33.0" layoutY="94.0" prefHeight="160.0" prefWidth="133.0">
               <columns>
-                <TableColumn prefWidth="132.0" text="Salas" fx:id="listaSalas" />
+                <TableColumn fx:id="listaSalas" prefWidth="132.0" text="Salas" />
               </columns>
             </TableView>
-            <TableView layoutX="33.0" layoutY="234.0" prefHeight="160.0" prefWidth="133.0">
+            <TableView layoutX="33.0" layoutY="254.0" prefHeight="160.0" prefWidth="133.0">
               <columns>
-                <TableColumn prefWidth="132.0" text="Usuários" fx:id="listaUsuariosSala" />
+                <TableColumn fx:id="listaUsuariosSala" prefWidth="132.0" text="Usuários" />
               </columns>
             </TableView>
-            <TextArea fx:id="conteudoSala" editable="false" layoutX="205.0" layoutY="74.0" prefHeight="340.0" prefWidth="385.0" />
+            <TextArea fx:id="conteudoSala" editable="false" layoutX="216.0" layoutY="76.0" prefHeight="340.0" prefWidth="385.0" />
             <Label alignment="CENTER" contentDisplay="TOP" layoutX="-2.0" layoutY="-2.0" prefHeight="25.0" prefWidth="628.0" style="-fx-background-color: cornflowerblue;" text="UAI CHAT" textAlignment="JUSTIFY" wrapText="true" />
-            <Button fx:id="criarSala" layoutX="34.0" layoutY="402.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Criar Nova Sala" />
-            <TextField fx:id="procuraSala" layoutX="33.0" layoutY="42.0" prefHeight="25.0" prefWidth="99.0" promptText="ID da sala" />
-            <Button fx:id="botaoEntrar" layoutX="139.0" layoutY="42.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Entrar em uma Sala" />
+            <TextField fx:id="procuraSala" layoutX="4.0" layoutY="44.0" prefHeight="32.0" prefWidth="87.0" promptText="Nome da sala" />
+            <Button fx:id="criarSala" layoutX="96.0" layoutY="32.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="109.0" text="Criar Nova Sala" />
+            <Button fx:id="botaoEntrar" layoutX="95.0" layoutY="63.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Entrar na Sala" />
           </children>
         </AnchorPane>
       </content>
