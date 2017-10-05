@@ -11,6 +11,7 @@ import DAOImpl.UsuarioDAOImpl;
 import domain.Usuario;
 import exception.BusinessException;
 import exception.PersistenceException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import service.ManterUsuario;
 import serviceimpl.ManterUsuarioImpl;
@@ -39,14 +41,8 @@ public class LoginController implements Initializable {
     @FXML
     private TextField nom_user;
     @FXML
-    private Button butao_esntrar;
-    
+    private Button botaoEntrar;
     private Client run;
-    
-    private BorderPane rootLayout;
-    
-    private Stage primaryStage;
-    
     private Usuario usuario;
 
     public Usuario getUsuario() {
@@ -56,15 +52,6 @@ public class LoginController implements Initializable {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
-
-    public BorderPane getRootLayout() {
-        return rootLayout;
-    }
-
-    public void setRootLayout(BorderPane rootLayout) {
-        this.rootLayout = rootLayout;
-    }
 
     /**
      * Initializes the controller class.
@@ -72,36 +59,45 @@ public class LoginController implements Initializable {
     public void setRun(Client run) {
         this.run = run;
     }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @FXML
     private void logar(ActionEvent event) {
         try {
-        UsuarioDAO dao = new UsuarioDAOImpl();
-        ManterUsuario manterusuario = new ManterUsuarioImpl(dao);
-        String nome = nom_user.getText();
-        usuario.setNome(nome);
-        
-        if (nome.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Falha ao logar");
-            alert.setHeaderText("erro");
-            alert.setContentText("O usuário não pode ser vazio");
-            alert.showAndWait(); 
-        }
-        else{
+            ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
+            String nomeUsuario = nom_user.getText();
+            this.usuario = new Usuario();
+            usuario.setNome(nomeUsuario);
+            if (nomeUsuario.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Falha ao logar");
+                alert.setHeaderText("erro");
+                alert.setContentText("O usuário não pode ser vazio");
+                alert.showAndWait();
+            } else {
                 manterusuario.criarUsuario(usuario);
-                //CHAMAR OUTRA TELA
-            
-            }
-        }    catch (Exception ex) {
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-    }
-    
+                showChat();
+                //passar usuario atual para prox tela
 
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void showChat() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Client.class.getResource("../View/chatView.fxml"));
+            AnchorPane telaChat = (AnchorPane) loader.load();
+            run.getRootLayout().setCenter(telaChat);
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+}

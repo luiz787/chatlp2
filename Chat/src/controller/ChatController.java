@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
  * @author Luiz
  */
 public class ChatController implements Initializable {
+
     @FXML
     private Button botaoEntrar;
     @FXML
@@ -49,19 +50,25 @@ public class ChatController implements Initializable {
     private Button enviarMensagem;
     @FXML
     private Button sairSala;
-    
-    private LoginController telaLogin;
-    
-    private Usuario usuario; 
-    
+
+    public Usuario usuario;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     private Client run;
 
     public void setRun(Client run) {
         this.run = run;
     }
-    
+
     @FXML
-    public void criarSala(ActionEvent event) throws PersistenceException{
+    public void criarSala(ActionEvent event) throws PersistenceException {
         System.out.println("Teste com sucesso");
         Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
@@ -73,20 +80,20 @@ public class ChatController implements Initializable {
         novaSala.addUsuario(atu);
         SalaDAO salaDAO = new SalaDAOImpl();
         salaDAO.createSala(novaSala);
-        System.out.println("Nome da sala: "+salaDAO.getSalaByNome(procuraSala.getText()).getNome());
+        System.out.println("Nome da sala: " + salaDAO.getSalaByNome(procuraSala.getText()).getNome());
     }
-    
+
     @FXML
-    public void entrarSala(ActionEvent event) throws PersistenceException{
+    public void entrarSala(ActionEvent event) throws PersistenceException {
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         Sala s = salaDAO.getSalaByNome(procuraSala.getText());
-        System.out.println(s==null?"existe":"nao existe");
+        System.out.println(s == null ? "existe" : "nao existe");
         //currentUser.setSala(s);
     }
-    
+
     @FXML
-    public void enviarMensagem(ActionEvent event) throws PersistenceException{
+    public void enviarMensagem(ActionEvent event) throws PersistenceException {
         System.out.println("Envia msg");
         String msg = textoEscrito.getText();
         Mensagem m = new Mensagem();
@@ -98,9 +105,9 @@ public class ChatController implements Initializable {
         m.setId(newId);
         //observer olha esse método para atualizar lista de mensagens POR SALA
     }
-    
+
     @FXML
-    public void sairSala(ActionEvent event){
+    public void sairSala(ActionEvent event) {
         System.out.println("Sair da sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
@@ -111,7 +118,7 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        usuario = telaLogin.getUsuario();
+
     }
-    
+
 }

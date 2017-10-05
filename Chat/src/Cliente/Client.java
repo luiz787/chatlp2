@@ -22,10 +22,21 @@ import javafx.stage.Stage;
  * @author Luiz
  */
 public class Client extends Application {
-    private Stage primaryStage; 
-    
+
+    private Stage primaryStage;
     private BorderPane rootLayout;
-    
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
+    public Client() {
+    }
+
     public BorderPane getRootLayout() {
         return rootLayout;
     }
@@ -33,7 +44,7 @@ public class Client extends Application {
     public void setRootLayout(BorderPane rootLayout) {
         this.rootLayout = rootLayout;
     }
-    
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -42,7 +53,7 @@ public class Client extends Application {
         //showChat();
         showLogin();
     }
-    
+
     public void initRootLayout() {
         try {
             // Carrega o root layout do arquivo fxml.
@@ -57,43 +68,22 @@ public class Client extends Application {
             e.printStackTrace();
         }
     }
-   
-   
-    private void showChat() {
-         try{
-            FXMLLoader loader = new FXMLLoader();
-            
-            loader.setLocation(Client.class.getResource("../View/chatView.fxml"));
-            AnchorPane chatView = (AnchorPane) loader.load();
-            
-            rootLayout.setCenter(chatView);
-            
-            ChatController controller = loader.getController();
-            controller.setRun(this);
-        
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+
     private void showLogin() {
-         try{
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Client.class.getResource("../View/LoginView.fxml"));
             AnchorPane Logar = (AnchorPane) loader.load();
-           
-            Scene scene = new Scene(Logar);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        
+            rootLayout.setCenter(Logar);
+            LoginController controller = loader.getController();
+            controller.setRun(this);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
-    
+
 }
