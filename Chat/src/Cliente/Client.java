@@ -6,6 +6,7 @@
 package Cliente;
 
 import controller.ChatController;
+import controller.LoginController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,8 @@ public class Client extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("UAI CHAT");
         initRootLayout();
-        showChat();
+        //showChat();
+        showLogin();
     }
     
     public void initRootLayout() {
@@ -55,17 +57,8 @@ public class Client extends Application {
             e.printStackTrace();
         }
     }
-   /* public void showChat(){
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Client.class.getResource("../view/chatView.fxml"));
-            AnchorPane Login = (AnchorPane) loader.load();
-            ChatController controller = loader.getController();
-            controller.setRun(this);
-        } catch (IOException ex){
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
+   
+   
     private void showChat() {
          try{
             FXMLLoader loader = new FXMLLoader();
@@ -77,6 +70,20 @@ public class Client extends Application {
             
             ChatController controller = loader.getController();
             controller.setRun(this);
+        
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void showLogin() {
+         try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Client.class.getResource("../View/LoginView.fxml"));
+            AnchorPane Logar = (AnchorPane) loader.load();
+           
+            Scene scene = new Scene(Logar);
+            primaryStage.setScene(scene);
+            primaryStage.show();
         
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
