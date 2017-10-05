@@ -50,6 +50,10 @@ public class ChatController implements Initializable {
     @FXML
     private Button sairSala;
     
+    private LoginController telaLogin;
+    
+    private Usuario usuario; 
+    
     private Client run;
 
     public void setRun(Client run) {
@@ -107,7 +111,7 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //
+        usuario = telaLogin.getUsuario();
     }
     
 }
