@@ -30,13 +30,16 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             String sql = "insert into Usuario (nom_usuario,nom_sala) values(?,?) ";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, usu.getNome());
+            if(usu.getSala()!= null){
             pstmt.setString(2, usu.getSala().getNome());
+            }else{
+                pstmt.setNull(2, java.sql.Types.NULL);
+            }
             
-            
-            ResultSet rs = pstmt.executeQuery();
+            pstmt.executeUpdate();
 
             
-            rs.close();
+            
             pstmt.close();
             connection.close();
             return usu;
