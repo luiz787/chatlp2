@@ -43,7 +43,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button botaoEntrar;
     private Client run;
-    private Usuario usuario;
+    public static Usuario usuario;
 
     public Usuario getUsuario() {
         return usuario;

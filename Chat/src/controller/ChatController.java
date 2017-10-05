@@ -50,17 +50,8 @@ public class ChatController implements Initializable {
     private Button enviarMensagem;
     @FXML
     private Button sairSala;
-
-    public Usuario usuario;
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
+    private LoginController infoLogin;
+    // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
 
     public void setRun(Client run) {
@@ -109,6 +100,7 @@ public class ChatController implements Initializable {
     @FXML
     public void sairSala(ActionEvent event) {
         System.out.println("Sair da sala");
+        System.out.println("usuario  "+ infoLogin.usuario.getNome());
         SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
