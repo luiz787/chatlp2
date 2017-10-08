@@ -46,7 +46,7 @@ import serviceimpl.ManterUsuarioImpl;
  *
  * @author Luiz
  */
-public class ChatController implements Initializable   {
+public class ChatController implements Initializable {
 
     @FXML
     private Button botaoEntrar;
@@ -58,7 +58,7 @@ public class ChatController implements Initializable   {
     private TableView<Sala> tabSalas;
     @FXML
     private TableView<Usuario> tabUsuarios;
-    
+
     @FXML
     private TableColumn<Sala, String> listaSalas;
     @FXML
@@ -80,7 +80,7 @@ public class ChatController implements Initializable   {
     ManterMensagem manterMensagem = new ManterMensagemImpl(new MensagemDAOImpl());
     @FXML
     private ListView<String> listaMensagens;
-    
+
     public void setRun(Client run) {
         this.run = run;
     }
@@ -89,10 +89,10 @@ public class ChatController implements Initializable   {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             atualizarSalas(FXCollections.observableArrayList(manterSala.getAll()));
-            
-        } catch (PersistenceException ex ) {
+
+        } catch (PersistenceException ex) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
 
     @FXML
@@ -156,15 +156,14 @@ public class ChatController implements Initializable   {
 
     public void atualizarMensagens(ObservableList<Mensagem> listMensagem) {
         ObservableList<String> lista = FXCollections.observableArrayList();
-        for (int i=0; i<listMensagem.size(); i++){
-            lista.add(listMensagem.get(i).getAutor().getNome()+" disse: " + listMensagem.get(i).getConteudo());
+        if (listMensagem.get(0) == null) {
+            listaMensagens.setItems(lista);
+        } else {
+            for (int i = 0; i < listMensagem.size(); i++) {
+                lista.add(listMensagem.get(i).getAutor().getNome() + " disse: " + listMensagem.get(i).getConteudo());
+            }
+            listaMensagens.setItems(lista);
         }
-        listaMensagens.setItems(lista);
     }
-    
-    
-        
-        
-    
-    
+
 }
