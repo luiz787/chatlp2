@@ -72,7 +72,7 @@ public class ChatController implements Initializable   {
     private LoginController infoLogin;
     // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
-    private Proxy proxy = new ProxyImpl();
+    private Proxy proxy = new ProxyImpl(this);
     private Sala sala;
 
     ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());

@@ -5,6 +5,7 @@
  */
 package Cliente;
 
+import controller.ChatController;
 import domain.Mensagem;
 import domain.Sala;
 import domain.Usuario;
@@ -21,6 +22,13 @@ public class ProxyImpl implements Proxy {
     String IPServidor = "localhost";
     int PortaServidor = 2230;
     int metodo;
+    ChatController chatController;
+    
+    public ProxyImpl(){}
+    
+    public ProxyImpl(ChatController c){
+        this.chatController = c;
+    }
 
     @Override
     public void enviarMensagem(Mensagem m) {
