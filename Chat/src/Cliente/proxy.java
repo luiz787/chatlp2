@@ -13,7 +13,7 @@ import domain.Usuario;
  *
  * @author F43L
  */
-public interface proxy {
+public interface Proxy {
     public void enviarMensagem(Mensagem m);
     public void criarUsuario(Usuario u);
     public void sairSala(Usuario u);

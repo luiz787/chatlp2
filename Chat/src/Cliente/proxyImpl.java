@@ -16,140 +16,97 @@ import java.net.Socket;
  *
  * @author F43L
  */
-public class proxyImpl implements proxy {
-    
+public class ProxyImpl implements Proxy {
+
     String IPServidor = "localhost";
     int PortaServidor = 2223;
     int metodo;
 
     @Override
     public void enviarMensagem(Mensagem m) {
-        try{
+        try {
             metodo = 1;
-            Socket c = new Socket (IPServidor, PortaServidor);
+            Socket c = new Socket(IPServidor, PortaServidor);
             System.out.println("estabelece conexao com servidor");
             ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
             saida.writeInt(metodo);
             saida.flush();
-            
             saida.writeObject(m); //envia mensagem
             saida.flush();
-            
-            
             c.close();
-            
-        
-        
+        } catch (Exception e) {
+            System.out.println("O seguinte problema ocorreu : \n" + e.toString());
         }
-        catch(Exception e) { 
-			System.out.println("O seguinte problema ocorreu : \n" + e.toString());
-                        
-		}
     }
 
     @Override
     public void criarUsuario(Usuario u) {
-        try{
+        try {
             metodo = 2;
-            Socket c = new Socket (IPServidor, PortaServidor);
+            Socket c = new Socket(IPServidor, PortaServidor);
             System.out.println("estabelece conexao com servidor");
             ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
             saida.writeInt(metodo);
             saida.flush();
-            
             saida.writeObject(u); //envia usuario
             saida.flush();
-            
-            
             c.close();
-            
-        
-        
+        } catch (Exception e) {
+            System.out.println("O seguinte problema ocorreu : \n" + e.toString());
         }
-        catch(Exception e) { 
-			System.out.println("O seguinte problema ocorreu : \n" + e.toString());
-                        
-		}
     }
 
     @Override
     public void sairSala(Usuario u) {
-        try{
+        try {
             metodo = 3;
-            Socket c = new Socket (IPServidor, PortaServidor);
+            Socket c = new Socket(IPServidor, PortaServidor);
             System.out.println("estabelece conexao com servidor");
             ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
             saida.writeInt(metodo);
             saida.flush();
-            
             saida.writeObject(u); //envia usuario que vai sair da sala
             saida.flush();
-            
-            
             c.close();
-            
-        
-        
+        } catch (Exception e) {
+            System.out.println("O seguinte problema ocorreu : \n" + e.toString());
         }
-        catch(Exception e) { 
-			System.out.println("O seguinte problema ocorreu : \n" + e.toString());
-                        
-		}
     }
 
     @Override
     public void criarSala(Sala s) {
-        try{
+        try {
             metodo = 4;
-            Socket c = new Socket (IPServidor, PortaServidor);
+            Socket c = new Socket(IPServidor, PortaServidor);
             System.out.println("estabelece conexao com servidor");
             ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
             saida.writeInt(metodo);
             saida.flush();
-            
             saida.writeObject(s); //envia sala
             saida.flush();
-            
-            
-            
             c.close();
-            
-        
-        
+        } catch (Exception e) {
+            System.out.println("O seguinte problema ocorreu : \n" + e.toString());
         }
-        catch(Exception e) { 
-			System.out.println("O seguinte problema ocorreu : \n" + e.toString());
-                        
-		}
     }
 
     @Override
     public void entrarSala(Sala s, Usuario u) {
-        try{
+        try {
             metodo = 5;
-            Socket c = new Socket (IPServidor, PortaServidor);
+            Socket c = new Socket(IPServidor, PortaServidor);
             System.out.println("estabelece conexao com servidor");
             ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
             saida.writeInt(metodo);
             saida.flush();
-            
             saida.writeObject(u); //envia sala
             saida.flush();
-            
             saida.writeObject(s); //envia sala
             saida.flush();
-            
-            
-            
             c.close();
-            
-        
-        
+        } catch (Exception e) {
+            System.out.println("O seguinte problema ocorreu : \n" + e.toString());
         }
-        catch(Exception e) { 
-			System.out.println("O seguinte problema ocorreu : \n" + e.toString());
-                        
-		}
     }
-    
+
 }
