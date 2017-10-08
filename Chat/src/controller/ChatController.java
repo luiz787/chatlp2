@@ -113,7 +113,7 @@ public class ChatController implements Initializable {
     }
 
     @FXML
-    public void criarSala(ActionEvent event) throws PersistenceException {
+    public void criarSala(ActionEvent event) throws PersistenceException, InterruptedException, BusinessException {
         Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
         LoginController.usuario.setSala(novaSala);
@@ -121,16 +121,21 @@ public class ChatController implements Initializable {
         proxy.sairSala(LoginController.usuario);
         proxy.entrarSala(novaSala, LoginController.usuario);
         sala = novaSala;
+        Thread.sleep(100);
+        atualizarSalas(FXCollections.observableArrayList(manterSala.getAll()));
+        atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
     }
 
     @FXML
-    public void entrarSala(ActionEvent event) throws PersistenceException {
+    public void entrarSala(ActionEvent event) throws PersistenceException, BusinessException, InterruptedException {
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         sala = salaDAO.getSalaByNome(procuraSala.getText());
         System.out.println(sala == null ? "sala n existe" : "existe");
         LoginController.usuario.setSala(sala);
         proxy.entrarSala(sala, LoginController.usuario);
+        Thread.sleep(100);
+        atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
     }
 
     @FXML
@@ -153,6 +158,7 @@ public class ChatController implements Initializable {
         proxy.sairSala(LoginController.usuario);
         sala = null;
         atualizarMensagens(FXCollections.observableArrayList((Mensagem) null));
+        atualizarUsuarios(FXCollections.observableArrayList((Usuario) null));
         /*SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
