@@ -59,7 +59,6 @@ public class SalaDAOImpl implements SalaDAO {
             String sql = "INSERT INTO sala ("
                     + "nom_sala)"
                     + "VALUES (?)";
-                    
             // como guardar os usuários no banco de dados?
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, s.getNome());

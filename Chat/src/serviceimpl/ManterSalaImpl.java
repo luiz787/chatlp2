@@ -39,7 +39,7 @@ public class ManterSalaImpl implements ManterSala {
         if (s.getNome().isEmpty()){
             throw new BusinessException("A sala deve ter um nome.");
         }
-        return true;
+        return salaDAO.createSala(s);
     }
 
     @Override

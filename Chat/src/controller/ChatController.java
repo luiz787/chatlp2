@@ -44,9 +44,7 @@ import serviceimpl.ManterUsuarioImpl;
  * @author Luiz
  */
 public class ChatController implements Initializable {
-    
-    
-    
+
     @FXML
     private Button botaoEntrar;
     @FXML
@@ -64,9 +62,9 @@ public class ChatController implements Initializable {
     @FXML
     private TableColumn<Mensagem, String> tabConteudo;
     @FXML
-    private TableColumn<Sala, String>  listaSalas;
+    private TableColumn<Sala, String> listaSalas;
     @FXML
-    private TableColumn<Usuario, String>  listaUsuariosSala;
+    private TableColumn<Usuario, String> listaUsuariosSala;
     @FXML
     private Button criarSala;
     @FXML
@@ -78,10 +76,10 @@ public class ChatController implements Initializable {
     private Client run;
     private Proxy proxy = new ProxyImpl();
     private Sala sala;
-    
+
     ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
     ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
-    
+
     public void setRun(Client run) {
         this.run = run;
     }
@@ -94,37 +92,32 @@ public class ChatController implements Initializable {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     public void criarSala(ActionEvent event) throws PersistenceException {
-       Sala novaSala = new Sala();    
+        Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
-       
-        infoLogin.usuario.setSala(novaSala);
-        novaSala.addUsuario(infoLogin.usuario);
-        
+        LoginController.usuario.setSala(novaSala);
+        novaSala.addUsuario(LoginController.usuario);
         proxy.criarSala(novaSala);
-        
+        proxy.sairSala(LoginController.usuario);
+        proxy.entrarSala(novaSala, LoginController.usuario);
+        sala = novaSala;
         /*
         SalaDAO salaDAO = new SalaDAOImpl();
         salaDAO.createSala(novaSala);
         System.out.println("Nome da sala: " + salaDAO.getSalaByNome(procuraSala.getText()).getNome());
-        */
-        
-        
-        
+         */
     }
 
     @FXML
     public void entrarSala(ActionEvent event) throws PersistenceException {
-        
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         sala = salaDAO.getSalaByNome(procuraSala.getText());
-        System.out.println(sala == null ? "existe" : "nao existe");
-        
-        proxy.entrarSala(sala,infoLogin.usuario );
-        
+        System.out.println(sala == null ? "sala n existe" : "existe");
+        LoginController.usuario.setSala(sala);
+        proxy.entrarSala(sala, LoginController.usuario);
     }
 
     @FXML
@@ -134,9 +127,9 @@ public class ChatController implements Initializable {
         Mensagem m = new Mensagem();
         m.setConteudo(msg);
         m.setSala(sala);
-        m.setAutor(infoLogin.usuario);
+        m.setAutor(LoginController.usuario);
         proxy.enviarMensagem(m);
-       /* MensagemDAO mensagemDAO = new MensagemDAOImpl();
+        /* MensagemDAO mensagemDAO = new MensagemDAOImpl();
         Long newId = mensagemDAO.createMensagem(m);
         m.setId(newId);*/
         //observer olha esse método para atualizar lista de mensagens POR SALA
@@ -145,9 +138,9 @@ public class ChatController implements Initializable {
     @FXML
     public void sairSala(ActionEvent event) {
         System.out.println("Sair da sala");
-        proxy.sairSala(infoLogin.usuario);
-        infoLogin.usuario.setSala(null);
-        
+        LoginController.usuario.setSala(null);
+        proxy.sairSala(LoginController.usuario);
+        sala = null;
         /*SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
@@ -155,17 +148,17 @@ public class ChatController implements Initializable {
         //usuarioDAO.alterarUsuario(currentUser);*/
     }
 
-    public void atualizarSalas(ObservableList<Sala> listSala){
+    public void atualizarSalas(ObservableList<Sala> listSala) {
         listaSalas.setCellValueFactory(new PropertyValueFactory<Sala, String>("nome"));
         tabSalas.setItems(listSala);
     }
-    
-    public void atualizarUsuarios(ObservableList<Usuario> listUsuario){
+
+    public void atualizarUsuarios(ObservableList<Usuario> listUsuario) {
         listaUsuariosSala.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
         tabUsuarios.setItems(listUsuario);
     }
-    
-    public void atualizarMensagens(ObservableList<Mensagem> listMensagem){
+
+    public void atualizarMensagens(ObservableList<Mensagem> listMensagem) {
         tabAutor.setCellValueFactory(new PropertyValueFactory<Mensagem, String>("getAutor().getNome()")); // PROBLEMA AQUI
         tabConteudo.setCellValueFactory(new PropertyValueFactory<Mensagem, String>("conteudo"));
         tabMensagem.setItems(listMensagem);
