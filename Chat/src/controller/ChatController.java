@@ -75,9 +75,9 @@ public class ChatController implements Initializable   {
     private Proxy proxy = new ProxyImpl(this);
     private Sala sala;
 
-    ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
-    ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
-    ManterMensagem mantermensagem = new ManterMensagemImpl(new MensagemDAOImpl());
+    ManterUsuario manterUsuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
+    ManterSala manterSala = new ManterSalaImpl(new SalaDAOImpl());
+    ManterMensagem manterMensagem = new ManterMensagemImpl(new MensagemDAOImpl());
     @FXML
     private ListView<String> listaMensagens;
     
@@ -88,7 +88,7 @@ public class ChatController implements Initializable   {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            atualizarSalas(FXCollections.observableArrayList(mantersala.getAll()));
+            atualizarSalas(FXCollections.observableArrayList(manterSala.getAll()));
             
         } catch (PersistenceException ex ) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,7 +96,7 @@ public class ChatController implements Initializable   {
     }
 
     @FXML
-    public void criarSala(ActionEvent event) throws PersistenceException {
+    public void criarSala(ActionEvent event) throws PersistenceException, InterruptedException, BusinessException {
         Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
         LoginController.usuario.setSala(novaSala);
@@ -104,21 +104,25 @@ public class ChatController implements Initializable   {
         proxy.sairSala(LoginController.usuario);
         proxy.entrarSala(novaSala, LoginController.usuario);
         sala = novaSala;
-        
+        Thread.sleep(100);
+        atualizarSalas(FXCollections.observableArrayList(manterSala.getAll()));
+        atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
     }
 
     @FXML
-    public void entrarSala(ActionEvent event) throws PersistenceException {
+    public void entrarSala(ActionEvent event) throws PersistenceException, InterruptedException, BusinessException {
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
         sala = salaDAO.getSalaByNome(procuraSala.getText());
         System.out.println(sala == null ? "sala n existe" : "existe");
         LoginController.usuario.setSala(sala);
         proxy.entrarSala(sala, LoginController.usuario);
+        Thread.sleep(100);
+        atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
     }
 
     @FXML
-    public void enviarMensagem(ActionEvent event) throws PersistenceException {
+    public void enviarMensagem(ActionEvent event) throws PersistenceException, InterruptedException, BusinessException {
         System.out.println("Envia msg");
         String msg = textoEscrito.getText();
         Mensagem m = new Mensagem();
@@ -126,7 +130,8 @@ public class ChatController implements Initializable   {
         m.setSala(sala);
         m.setAutor(LoginController.usuario);
         proxy.enviarMensagem(m);
-       
+        Thread.sleep(100);
+        atualizarMensagens(FXCollections.observableArrayList(manterMensagem.getAllBySala(sala)));
     }
 
     @FXML
@@ -135,7 +140,8 @@ public class ChatController implements Initializable   {
         LoginController.usuario.setSala(null);
         proxy.sairSala(LoginController.usuario);
         sala = null;
-      
+        atualizarMensagens(FXCollections.observableArrayList((Mensagem) null));
+        atualizarUsuarios(FXCollections.observableArrayList((Usuario) null));
     }
 
     public void atualizarSalas(ObservableList<Sala> listSala) {
@@ -149,12 +155,10 @@ public class ChatController implements Initializable   {
     }
 
     public void atualizarMensagens(ObservableList<Mensagem> listMensagem) {
-           
         ObservableList<String> lista = FXCollections.observableArrayList();
         for (int i=0; i<listMensagem.size(); i++){
             lista.add(listMensagem.get(i).getAutor().getNome()+" disse: " + listMensagem.get(i).getConteudo());
         }
-        
         listaMensagens.setItems(lista);
     }
     
