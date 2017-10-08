@@ -100,7 +100,6 @@ public class ChatController implements Initializable   {
         Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
         LoginController.usuario.setSala(novaSala);
-        novaSala.addUsuario(LoginController.usuario);
         proxy.criarSala(novaSala);
         proxy.sairSala(LoginController.usuario);
         proxy.entrarSala(novaSala, LoginController.usuario);
