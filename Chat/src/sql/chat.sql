@@ -38,7 +38,7 @@ ALTER TABLE `Usuario` ADD  PRIMARY KEY (`nom_usuario`)
 
 CREATE TABLE `Mensagem`
 (
-  `cod_mensagem` Int NOT NULL,
+  `cod_mensagem` Int NOT NULL AUTO INCREMENT,
   `nom_sala` Char(20),
   `nom_usuario` Char(30),
   `des_conteudo` Text NOT NULL
