@@ -6,6 +6,8 @@
 package controller;
 
 import Cliente.Client;
+import Cliente.Proxy;
+import Cliente.ProxyImpl;
 import DAO.UsuarioDAO;
 import DAOImpl.UsuarioDAOImpl;
 import domain.Usuario;
@@ -68,7 +70,21 @@ public class LoginController implements Initializable {
     @FXML
     private void logar(ActionEvent event) {
         try {
-            ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
+            Proxy proxy = new ProxyImpl();
+            String nomeUsuario = nom_user.getText();
+            this.usuario = new Usuario();
+            usuario.setNome(nomeUsuario);
+            if (nomeUsuario.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Falha ao logar");
+                alert.setHeaderText("erro");
+                alert.setContentText("O usuário não pode ser vazio");
+                alert.showAndWait();
+            } else {
+                proxy.criarUsuario(usuario);
+                showChat();
+            }
+           /* ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
             String nomeUsuario = nom_user.getText();
             this.usuario = new Usuario();
             usuario.setNome(nomeUsuario);
@@ -83,7 +99,8 @@ public class LoginController implements Initializable {
                 showChat();
                 //passar usuario atual para prox tela
 
-            }
+            }*/
+           
         } catch (Exception ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
