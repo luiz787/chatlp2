@@ -70,11 +70,13 @@ public class LoginController implements Initializable {
     @FXML
     private void logar(ActionEvent event) {
         try {
+            ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
             Proxy proxy = new ProxyImpl();
             String nomeUsuario = nom_user.getText();
             this.usuario = new Usuario();
             usuario.setNome(nomeUsuario);
-            if (nomeUsuario.isEmpty()) {
+            if (nomeUsuario.isEmpty() || manterusuario.getUsuarioByNome(nomeUsuario).getNome()!=null) {
+                
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Falha ao logar");
                 alert.setHeaderText("erro");
