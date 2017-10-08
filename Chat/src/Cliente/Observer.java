@@ -5,13 +5,10 @@
  */
 package Cliente;
 
-import controller.ChatController;
-
 /**
  *
  * @author Luiz
  */
 public abstract class Observer {
-    protected ChatController subject;
     public abstract void update();
 }

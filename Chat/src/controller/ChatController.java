@@ -37,8 +37,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import service.ManterMensagem;
 import service.ManterSala;
 import service.ManterUsuario;
+import serviceimpl.ManterMensagemImpl;
 import serviceimpl.ManterSalaImpl;
 import serviceimpl.ManterUsuarioImpl;
 
@@ -75,24 +77,27 @@ public class ChatController implements Initializable {
     @FXML
     private Button sairSala;
     
-    private List<Observer> observers = new ArrayList<>();
     private LoginController infoLogin;
     // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
     private Proxy proxy = new ProxyImpl();
     private Sala sala;
-    ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
-    ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
+    ManterUsuario manterUsuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
+    ManterSala manterSala = new ManterSalaImpl(new SalaDAOImpl());
+    ManterMensagem manterMensagem = new ManterMensagemImpl(new MensagemDAOImpl());
     
-    public void attach(Observer observer){
-        observers.add(observer);
-    }
-    
-    public void notifyAllObservers(){
-        for (Observer observer:observers){
-            observer.update();
+    /*private class ObserverImpl extends Observer {
+        @Override
+        public void update() {
+            try {
+                atualizarMensagens(FXCollections.observableArrayList(manterSala.getAll()));
+                atualizarSalas(FXCollections.observableArrayList(manterMensagem.getAllBySala(sala)));
+                atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
+            } catch (PersistenceException | BusinessException ex) {
+                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    }
+    }*/
 
     public void setRun(Client run) {
         this.run = run;
@@ -101,7 +106,7 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            atualizarSalas(FXCollections.observableArrayList(mantersala.getAll()));
+            atualizarSalas(FXCollections.observableArrayList(manterSala.getAll()));
         } catch (PersistenceException ex) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,12 +121,6 @@ public class ChatController implements Initializable {
         proxy.sairSala(LoginController.usuario);
         proxy.entrarSala(novaSala, LoginController.usuario);
         sala = novaSala;
-        notifyAllObservers();
-        /*
-        SalaDAO salaDAO = new SalaDAOImpl();
-        salaDAO.createSala(novaSala);
-        System.out.println("Nome da sala: " + salaDAO.getSalaByNome(procuraSala.getText()).getNome());
-         */
     }
 
     @FXML
@@ -132,11 +131,10 @@ public class ChatController implements Initializable {
         System.out.println(sala == null ? "sala n existe" : "existe");
         LoginController.usuario.setSala(sala);
         proxy.entrarSala(sala, LoginController.usuario);
-        notifyAllObservers();
     }
 
     @FXML
-    public void enviarMensagem(ActionEvent event) throws PersistenceException {
+    public void enviarMensagem(ActionEvent event) throws PersistenceException, BusinessException, InterruptedException {
         System.out.println("Envia msg");
         String msg = textoEscrito.getText();
         Mensagem m = new Mensagem();
@@ -144,11 +142,8 @@ public class ChatController implements Initializable {
         m.setSala(sala);
         m.setAutor(LoginController.usuario);
         proxy.enviarMensagem(m);
-        notifyAllObservers();
-        /* MensagemDAO mensagemDAO = new MensagemDAOImpl();
-        Long newId = mensagemDAO.createMensagem(m);
-        m.setId(newId);*/
-        //observer olha esse método para atualizar lista de mensagens POR SALA
+        Thread.sleep(100);
+        atualizarMensagens(FXCollections.observableArrayList(manterMensagem.getAllBySala(sala)));
     }
 
     @FXML
@@ -157,7 +152,7 @@ public class ChatController implements Initializable {
         LoginController.usuario.setSala(null);
         proxy.sairSala(LoginController.usuario);
         sala = null;
-        notifyAllObservers();
+        atualizarMensagens(FXCollections.observableArrayList((Mensagem) null));
         /*SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
