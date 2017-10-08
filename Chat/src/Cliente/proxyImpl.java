@@ -19,7 +19,7 @@ import java.net.Socket;
 public class ProxyImpl implements Proxy {
 
     String IPServidor = "localhost";
-    int PortaServidor = 2223;
+    int PortaServidor = 2230;
     int metodo;
 
     @Override

@@ -5,13 +5,14 @@
  */
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Luiz
  */
-public class Sala {
+public class Sala implements Serializable{
     private String nome;
     private ArrayList<Usuario> usuarios;
     
