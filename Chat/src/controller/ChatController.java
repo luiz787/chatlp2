@@ -6,6 +6,8 @@
 package controller;
 
 import Cliente.Client;
+import Cliente.Proxy;
+import Cliente.ProxyImpl;
 import DAO.MensagemDAO;
 import DAO.SalaDAO;
 import DAO.UsuarioDAO;
@@ -15,16 +17,24 @@ import DAOImpl.UsuarioDAOImpl;
 import domain.Mensagem;
 import domain.Sala;
 import domain.Usuario;
+import exception.BusinessException;
 import exception.PersistenceException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import service.ManterSala;
+import service.ManterUsuario;
+import serviceimpl.ManterSalaImpl;
+import serviceimpl.ManterUsuarioImpl;
 
 /**
  *
@@ -36,8 +46,6 @@ public class ChatController implements Initializable {
     private Button botaoEntrar;
     @FXML
     private TextField procuraSala;
-    @FXML
-    private TextArea conteudoSala;
     @FXML
     private TextArea textoEscrito;
     @FXML
@@ -53,34 +61,55 @@ public class ChatController implements Initializable {
     private LoginController infoLogin;
     // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
+    private Proxy proxy = new ProxyImpl();
+    private Sala sala;
+    @FXML
+    private TableView<?> tabSalas;
+    @FXML
+    private TableView<?> tabUsuarios;
+    @FXML
+    private TableView<?> tabMensagem;
+    @FXML
+    private TableColumn<?, ?> tabAutor;
+    @FXML
+    private TableColumn<?, ?> tabConteudo;
 
+    ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
+    ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
     public void setRun(Client run) {
         this.run = run;
     }
 
     @FXML
     public void criarSala(ActionEvent event) throws PersistenceException {
-        System.out.println("Teste com sucesso");
-        Sala novaSala = new Sala();
+       Sala novaSala = new Sala();    
         novaSala.setNome(procuraSala.getText());
-        //currentUser.setSala(novaSala);
-        //novaSala.addUsuario(currentUser);
-        Usuario atu = new Usuario();
-        atu.setNome("Luiz");
-        atu.setSala(novaSala);
-        novaSala.addUsuario(atu);
+       
+        infoLogin.usuario.setSala(novaSala);
+        novaSala.addUsuario(infoLogin.usuario);
+        
+        proxy.criarSala(novaSala);
+        
+        /*
         SalaDAO salaDAO = new SalaDAOImpl();
         salaDAO.createSala(novaSala);
         System.out.println("Nome da sala: " + salaDAO.getSalaByNome(procuraSala.getText()).getNome());
+        */
+        
+        
+        
     }
 
     @FXML
     public void entrarSala(ActionEvent event) throws PersistenceException {
+        
         System.out.println("Entrar sala");
         SalaDAO salaDAO = new SalaDAOImpl();
-        Sala s = salaDAO.getSalaByNome(procuraSala.getText());
-        System.out.println(s == null ? "existe" : "nao existe");
-        //currentUser.setSala(s);
+        sala = salaDAO.getSalaByNome(procuraSala.getText());
+        System.out.println(sala == null ? "existe" : "nao existe");
+        
+        proxy.entrarSala(sala,infoLogin.usuario );
+        
     }
 
     @FXML
@@ -88,24 +117,27 @@ public class ChatController implements Initializable {
         System.out.println("Envia msg");
         String msg = textoEscrito.getText();
         Mensagem m = new Mensagem();
-        //m.setAutor(currentUser);
-        //m.setSala(currentUser.getSala());
         m.setConteudo(msg);
-        MensagemDAO mensagemDAO = new MensagemDAOImpl();
+        m.setSala(sala);
+        m.setAutor(infoLogin.usuario);
+        proxy.enviarMensagem(m);
+       /* MensagemDAO mensagemDAO = new MensagemDAOImpl();
         Long newId = mensagemDAO.createMensagem(m);
-        m.setId(newId);
+        m.setId(newId);*/
         //observer olha esse método para atualizar lista de mensagens POR SALA
     }
 
     @FXML
     public void sairSala(ActionEvent event) {
         System.out.println("Sair da sala");
-        System.out.println("usuario  "+ infoLogin.usuario.getNome());
-        SalaDAO salaDAO = new SalaDAOImpl();
+        proxy.sairSala(infoLogin.usuario);
+        infoLogin.usuario.setSala(null);
+        
+        /*SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
         //currentUser.setSala(null); // sala pode ser NULL? se não, o botao sair não existe.
-        //usuarioDAO.alterarUsuario(currentUser);
+        //usuarioDAO.alterarUsuario(currentUser);*/
     }
 
     @Override
