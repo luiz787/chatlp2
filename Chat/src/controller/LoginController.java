@@ -75,34 +75,23 @@ public class LoginController implements Initializable {
             String nomeUsuario = nom_user.getText();
             this.usuario = new Usuario();
             usuario.setNome(nomeUsuario);
-            if (nomeUsuario.isEmpty() || manterusuario.getUsuarioByNome(nomeUsuario).getNome()!=null) {
-                
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Falha ao logar");
-                alert.setHeaderText("erro");
-                alert.setContentText("O usuário não pode ser vazio");
-                alert.showAndWait();
-            } else {
-                proxy.criarUsuario(usuario);
-                showChat();
-            }
-           /* ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
-            String nomeUsuario = nom_user.getText();
-            this.usuario = new Usuario();
-            usuario.setNome(nomeUsuario);
             if (nomeUsuario.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Falha ao logar");
                 alert.setHeaderText("erro");
                 alert.setContentText("O usuário não pode ser vazio");
                 alert.showAndWait();
+            } else if (manterusuario.getUsuarioByNome(nomeUsuario).getNome()!=null){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Falha ao logar");
+                alert.setHeaderText("erro");
+                alert.setContentText("O nome de usuário já existe");
+                alert.showAndWait();
             } else {
-                manterusuario.criarUsuario(usuario);
+                proxy.criarUsuario(usuario);
                 showChat();
-                //passar usuario atual para prox tela
-
-            }*/
-           
+            }
+            //excluir user ao fechar aplicacao
         } catch (Exception ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }

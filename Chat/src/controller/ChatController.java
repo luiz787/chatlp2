@@ -6,6 +6,7 @@
 package controller;
 
 import Cliente.Client;
+import Cliente.Observer;
 import Cliente.Proxy;
 import Cliente.ProxyImpl;
 import DAO.MensagemDAO;
@@ -20,6 +21,8 @@ import domain.Usuario;
 import exception.BusinessException;
 import exception.PersistenceException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,14 +74,25 @@ public class ChatController implements Initializable {
     private Button enviarMensagem;
     @FXML
     private Button sairSala;
+    
+    private List<Observer> observers = new ArrayList<>();
     private LoginController infoLogin;
     // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
     private Proxy proxy = new ProxyImpl();
     private Sala sala;
-
     ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
     ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
+    
+    public void attach(Observer observer){
+        observers.add(observer);
+    }
+    
+    public void notifyAllObservers(){
+        for (Observer observer:observers){
+            observer.update();
+        }
+    }
 
     public void setRun(Client run) {
         this.run = run;
@@ -98,11 +112,11 @@ public class ChatController implements Initializable {
         Sala novaSala = new Sala();
         novaSala.setNome(procuraSala.getText());
         LoginController.usuario.setSala(novaSala);
-        novaSala.addUsuario(LoginController.usuario);
         proxy.criarSala(novaSala);
         proxy.sairSala(LoginController.usuario);
         proxy.entrarSala(novaSala, LoginController.usuario);
         sala = novaSala;
+        notifyAllObservers();
         /*
         SalaDAO salaDAO = new SalaDAOImpl();
         salaDAO.createSala(novaSala);
@@ -118,6 +132,7 @@ public class ChatController implements Initializable {
         System.out.println(sala == null ? "sala n existe" : "existe");
         LoginController.usuario.setSala(sala);
         proxy.entrarSala(sala, LoginController.usuario);
+        notifyAllObservers();
     }
 
     @FXML
@@ -129,6 +144,7 @@ public class ChatController implements Initializable {
         m.setSala(sala);
         m.setAutor(LoginController.usuario);
         proxy.enviarMensagem(m);
+        notifyAllObservers();
         /* MensagemDAO mensagemDAO = new MensagemDAOImpl();
         Long newId = mensagemDAO.createMensagem(m);
         m.setId(newId);*/
@@ -141,6 +157,7 @@ public class ChatController implements Initializable {
         LoginController.usuario.setSala(null);
         proxy.sairSala(LoginController.usuario);
         sala = null;
+        notifyAllObservers();
         /*SalaDAO salaDAO = new SalaDAOImpl();
         //salaDAO vai ter que ter metodos q atualiza os usuários da sala
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
@@ -163,5 +180,4 @@ public class ChatController implements Initializable {
         tabConteudo.setCellValueFactory(new PropertyValueFactory<Mensagem, String>("conteudo"));
         tabMensagem.setItems(listMensagem);
     }
-
 }

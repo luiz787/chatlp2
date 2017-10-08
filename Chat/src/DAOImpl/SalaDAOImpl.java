@@ -37,13 +37,12 @@ public class SalaDAOImpl implements SalaDAO {
             if (rs.next()) {
                 s = new Sala();
                 s.setNome(rs.getString("nom_sala"));
-                s.setUsuarios(usuarioDAOImpl.getAllByRoomName(nome));   
             }
             rs.close();
             pstmt.close();
             connection.close();
             return s;
-        } catch (SQLException | ClassNotFoundException | PersistenceException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(SalaDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new PersistenceException(ex.getMessage());
         }
