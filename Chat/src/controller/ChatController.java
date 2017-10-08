@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +33,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import service.ManterSala;
 import service.ManterUsuario;
 import serviceimpl.ManterSalaImpl;
@@ -41,7 +44,9 @@ import serviceimpl.ManterUsuarioImpl;
  * @author Luiz
  */
 public class ChatController implements Initializable {
-
+    
+    
+    
     @FXML
     private Button botaoEntrar;
     @FXML
@@ -49,9 +54,19 @@ public class ChatController implements Initializable {
     @FXML
     private TextArea textoEscrito;
     @FXML
-    private TableColumn listaSalas;
+    private TableView<Sala> tabSalas;
     @FXML
-    private TableColumn listaUsuariosSala;
+    private TableView<Usuario> tabUsuarios;
+    @FXML
+    private TableView<Mensagem> tabMensagem;
+    @FXML
+    private TableColumn<Mensagem, String> tabAutor;
+    @FXML
+    private TableColumn<Mensagem, String> tabConteudo;
+    @FXML
+    private TableColumn<Sala, String>  listaSalas;
+    @FXML
+    private TableColumn<Usuario, String>  listaUsuariosSala;
     @FXML
     private Button criarSala;
     @FXML
@@ -63,23 +78,23 @@ public class ChatController implements Initializable {
     private Client run;
     private Proxy proxy = new ProxyImpl();
     private Sala sala;
-    @FXML
-    private TableView<?> tabSalas;
-    @FXML
-    private TableView<?> tabUsuarios;
-    @FXML
-    private TableView<?> tabMensagem;
-    @FXML
-    private TableColumn<?, ?> tabAutor;
-    @FXML
-    private TableColumn<?, ?> tabConteudo;
-
+    
     ManterUsuario manterusuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
     ManterSala mantersala = new ManterSalaImpl(new SalaDAOImpl());
+    
     public void setRun(Client run) {
         this.run = run;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            atualizarSalas(FXCollections.observableArrayList(mantersala.getAll()));
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @FXML
     public void criarSala(ActionEvent event) throws PersistenceException {
        Sala novaSala = new Sala();    
@@ -140,9 +155,20 @@ public class ChatController implements Initializable {
         //usuarioDAO.alterarUsuario(currentUser);*/
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
+    public void atualizarSalas(ObservableList<Sala> listSala){
+        listaSalas.setCellValueFactory(new PropertyValueFactory<Sala, String>("nome"));
+        tabSalas.setItems(listSala);
+    }
+    
+    public void atualizarUsuarios(ObservableList<Usuario> listUsuario){
+        listaUsuariosSala.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
+        tabUsuarios.setItems(listUsuario);
+    }
+    
+    public void atualizarMensagens(ObservableList<Mensagem> listMensagem){
+        tabAutor.setCellValueFactory(new PropertyValueFactory<Mensagem, String>("getAutor().getNome()")); // PROBLEMA AQUI
+        tabConteudo.setCellValueFactory(new PropertyValueFactory<Mensagem, String>("conteudo"));
+        tabMensagem.setItems(listMensagem);
     }
 
 }
