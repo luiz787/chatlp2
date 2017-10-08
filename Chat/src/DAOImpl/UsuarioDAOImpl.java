@@ -51,12 +51,17 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     public Usuario alterarUsuario(Usuario usu) throws PersistenceException {
         try {
             Connection connection = JDBCManterConexao.getInstancia().getConexao();
-            String sql = "UPDATE Usuario SET nom_sala=? WHERE nom_usuario=? ";
+            String sql = "UPDATE Usuario SET nom_sala=? WHERE nom_usuario = ? ";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, usu.getSala().getNome());
+  
+            if (usu.getSala() != null) {
+                pstmt.setString(1, usu.getSala().getNome());
+            } else {
+                pstmt.setNull(1, java.sql.Types.NULL);
+            }
             pstmt.setString(2, usu.getNome());
-
-            int rs = pstmt.executeUpdate();
+           
+            pstmt.executeUpdate();
 
             SalaDAOImpl salaDAOImpl = new SalaDAOImpl();
             pstmt.close();
