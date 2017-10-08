@@ -6,7 +6,6 @@
 package controller;
 
 import Cliente.Client;
-import Cliente.Observer;
 import Cliente.Proxy;
 import Cliente.ProxyImpl;
 import DAO.MensagemDAO;
@@ -76,28 +75,14 @@ public class ChatController implements Initializable {
     private Button enviarMensagem;
     @FXML
     private Button sairSala;
-    
-    private LoginController infoLogin;
-    // ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
+
+    private LoginController infoLogin;// ATENÇÃO: PARA ACESSAR USUARIO LOGADO USAR infoLogin.usuario
     private Client run;
     private Proxy proxy = new ProxyImpl();
     private Sala sala;
     ManterUsuario manterUsuario = new ManterUsuarioImpl(new UsuarioDAOImpl());
     ManterSala manterSala = new ManterSalaImpl(new SalaDAOImpl());
     ManterMensagem manterMensagem = new ManterMensagemImpl(new MensagemDAOImpl());
-    
-    /*private class ObserverImpl extends Observer {
-        @Override
-        public void update() {
-            try {
-                atualizarMensagens(FXCollections.observableArrayList(manterSala.getAll()));
-                atualizarSalas(FXCollections.observableArrayList(manterMensagem.getAllBySala(sala)));
-                atualizarUsuarios(FXCollections.observableArrayList(manterUsuario.getAllByRoom(sala)));
-            } catch (PersistenceException | BusinessException ex) {
-                Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }*/
 
     public void setRun(Client run) {
         this.run = run;
@@ -159,11 +144,6 @@ public class ChatController implements Initializable {
         sala = null;
         atualizarMensagens(FXCollections.observableArrayList((Mensagem) null));
         atualizarUsuarios(FXCollections.observableArrayList((Usuario) null));
-        /*SalaDAO salaDAO = new SalaDAOImpl();
-        //salaDAO vai ter que ter metodos q atualiza os usuários da sala
-        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-        //currentUser.setSala(null); // sala pode ser NULL? se não, o botao sair não existe.
-        //usuarioDAO.alterarUsuario(currentUser);*/
     }
 
     public void atualizarSalas(ObservableList<Sala> listSala) {
